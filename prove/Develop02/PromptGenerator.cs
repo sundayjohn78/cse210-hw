@@ -1,20 +1,27 @@
 using System;
+using System.Collections.Generic;
+
 public class PromptGenerator
 {
-    public List<string> __prompts;
+    private List<string> __prompts;
 
- public string GetRandomPrompt()
+    public PromptGenerator()
     {
-        List<string> promptList = new List<string>
+        __prompts = new List<string>
         {
             "How was your day?",
             "How was your night?",
-            "How was your afternoon?"
+            "How was your afternoon?",
+            "What could you have done better today?",
+            "What made you happy today?",
+            "How are you feeling today?"
         };
+    }
 
+    public string GetRandomPrompt()
+    {
         Random random = new Random();
-        int promptIndex = random.Next(promptList.Count);
-        string selectedPrompt = promptList[promptIndex];
-        return selectedPrompt;
+        int promptIndex = random.Next(__prompts.Count);
+        return __prompts[promptIndex];
     }
 }
