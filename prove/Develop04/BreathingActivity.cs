@@ -16,8 +16,8 @@ public class BreathingActivity : Activity
     public void Run()
     {
         Console.WriteLine("Breathe in....");
-        ShowCountDown(_duration);
+        ShowSpinner(_duration);
         Console.WriteLine("Breathe out....");
-        ShowCountDown(_duration);
+        ShowSpinner(_duration);
     }
 }

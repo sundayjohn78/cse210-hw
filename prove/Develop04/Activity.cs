@@ -36,10 +36,10 @@ public class Activity
 
     public void ShowCountDown(int seconds)
     {
-        Console.Write("Counting down: ");
+        Console.Write("");
         for (int i = seconds; i > 0; i--)
         {
-            Console.Write($"{i} ");
+            Console.Write($"__{i}");
             Thread.Sleep(1000);
         }
         Console.WriteLine();
@@ -47,15 +47,15 @@ public class Activity
 
     public void ShowSpinner(int seconds)
     {
-        Console.Write("Spinning: ");
-        List<string> animationStrings = new List<string> { "^", ">", "~", "<" };
+        Console.Write("");
+        List<string> animationStrings = new List<string> { "./", "../", ".../", "..../"};
 
         for (int i = 0; i < seconds; i++)
         {
             foreach (var symbol in animationStrings)
             {
                 Console.Write(symbol + " ");
-                Thread.Sleep(250); // Adjust the delay as needed
+                Thread.Sleep(500); // Adjust the delay as needed
                 Console.SetCursorPosition(Console.CursorLeft - 2, Console.CursorTop);
             }
         }
