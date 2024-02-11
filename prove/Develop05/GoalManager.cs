@@ -98,49 +98,83 @@ public class GoalManager
 
     private void ListGoals()
     {
+        Console.WriteLine("List of Goals:");
         for (int i = 0; i < goals.Count; i++)
         {
             string status = goals[i].IsComplete() ? "[x]" : "[ ]";
-            Console.WriteLine($"{status} {goals[i].GetDetailsString()}");
+            Console.WriteLine($"{i + 1}. {status} {goals[i].GetDetailsString()}");
         }
     }
 
     private void SaveGoals()
     {
-        using (StreamWriter writer = new StreamWriter("goals.txt"))
+        Console.Write("Enter the filename to save the goals (e.g., name.txt): ");
+        string filename = Console.ReadLine();
+        
+        using (StreamWriter writer = new StreamWriter(filename))
         {
             foreach (Goal goal in goals)
             {
-                writer.WriteLine(goal.GetStringRepresentation());
-            }
-            writer.WriteLine(totalScore);
+                writer.WriteLine($"{goal.GetType().Name},{goal.Name},{goal.Description},{goal.Points},{goal.IsComplete()}");
+                }
+                writer.WriteLine(totalScore);
         }
+        Console.WriteLine("Goals saved successfully.");
     }
+
 
     private void LoadGoals()
     {
+        Console.Write("Enter the filename to load the goals from: ");
+        string filename = Console.ReadLine();
+
         goals.Clear();
-        using (StreamReader reader = new StreamReader("goals.txt"))
+        using (StreamReader reader = new StreamReader(filename))
         {
             string line;
             while ((line = reader.ReadLine()) != null)
             {
                 string[] parts = line.Split(',');
-                if (parts.Length == 4)
+                if (parts.Length >= 5)
                 {
-                    goals.Add(new SimpleGoal(parts[0], parts[1], int.Parse(parts[2]), bool.Parse(parts[3])));
-                }
-                else if (parts.Length == 6)
-                {
-                    goals.Add(new ChecklistGoal(parts[0], parts[1], int.Parse(parts[2]), int.Parse(parts[3]), int.Parse(parts[4]), bool.Parse(parts[5])));
-                }
-                else if (parts.Length == 3)
-                {
-                    goals.Add(new EternalGoal(parts[0], parts[1], int.Parse(parts[2])));
+                    string goalType = parts[0];
+                    string name = parts[1];
+                    string description = parts[2];
+                    int points = int.Parse(parts[3]);
+                    bool isComplete = bool.Parse(parts[4]);
+
+                    Goal goal = null;
+                    switch (goalType)
+                    {
+                        case nameof(SimpleGoal):
+                            goal = new SimpleGoal(name, description, points, isComplete);
+                            break;
+                        case nameof(ChecklistGoal):
+                            if (parts.Length >= 7)
+                            {
+                                int target = int.Parse(parts[5]);
+                                int bonus = int.Parse(parts[6]);
+                                goal = new ChecklistGoal(name, description, points, target, bonus, isComplete);
+                            }
+                            break;
+                        case nameof(EternalGoal):
+                            goal = new EternalGoal(name, description, points);
+                            break;
+                    }
+                    if (goal != null)
+                    {
+                        goals.Add(goal);
+                    }
                 }
             }
-            totalScore = int.Parse(reader.ReadLine());
+            string totalScoreLine = reader.ReadLine();
+            if (totalScoreLine != null)
+            {
+                totalScore = int.Parse(totalScoreLine);   
+            }
         }
+
+        Console.WriteLine("Goals loaded successfully.");
     }
 
     private void RecordEvent()
