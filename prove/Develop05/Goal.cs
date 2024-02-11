@@ -6,6 +6,7 @@ public class Goal
     protected bool completed;
 
     public int Points { get { return points; } }
+    public string Name { get { return name; } }
 
     public Goal(string name, string description, int points, bool completed = false)
     {

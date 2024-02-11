@@ -33,7 +33,14 @@ public class GoalManager
                     CreateGoalMenu();
                     break;
                 case "2":
-                    ListGoals();
+                    if (goals.Count == 0)
+                    {
+                        Console.WriteLine("You have not created any goals yet.");
+                    }
+                    else
+                    {
+                        ListGoals();
+                    }
                     break;
                 case "3":
                     SaveGoals();
@@ -93,7 +100,8 @@ public class GoalManager
     {
         for (int i = 0; i < goals.Count; i++)
         {
-            Console.WriteLine($"{i+1}. {goals[i].GetDetailsString()}");
+            string status = goals[i].IsComplete() ? "[x]" : "[ ]";
+            Console.WriteLine($"{status} {goals[i].GetDetailsString()}");
         }
     }
 
@@ -146,6 +154,20 @@ public class GoalManager
             goal.RecordEvent();
             totalScore += goal.Points;
             Console.WriteLine($"Congratulations! You earned {goal.Points} points.");
+
+            // Check if it's a checklist goal and update progress
+            if (goal is ChecklistGoal checklistGoal)
+            {
+                if (checklistGoal.IsComplete())
+                {
+                    Console.WriteLine($"Goal '{checklistGoal.Name}' completed! Bonus points earned: {checklistGoal.Bonus}");
+                    totalScore += checklistGoal.Bonus;
+                }
+                else
+                {
+                    Console.WriteLine($"Progress: {checklistGoal.CurrentProgress}/{checklistGoal.Target}");
+                }
+            }
         }
         else
         {
